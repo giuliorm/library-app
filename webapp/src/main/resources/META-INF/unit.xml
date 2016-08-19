@@ -1,0 +1,26 @@
+<persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+  http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+    <persistence-unit name="libraryPU" transaction-type="RESOURCE_LOCAL">
+       <!-- <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider> -->
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <class>library.domain.Book</class>
+        <class>library.domain.User</class>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL81Dialect" />
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>
+            <property name="javax.persistence.jdbc.password" value="1" />
+            <property name="javax.persistence.jdbc.user" value="postgres" />
+        <!--    <property name="hibernate.hbm2ddl.auto" value="create-drop" /> -->
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value = "true"/>
+            <property name="spring.jpa.database-platform" value="org.hibernate.dialect.PostgreSQL82Dialect" />
+        </properties>
+    </persistence-unit>
+
+</persistence>
+
