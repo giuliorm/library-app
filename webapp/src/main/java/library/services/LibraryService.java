@@ -12,7 +12,7 @@ import java.util.Collection;
 public interface LibraryService {
 
     Collection<Book> all();
-    void createOrUpdate(Book book);
+    Book createOrUpdate(Book book);
     void remove(Integer bookId);
     Book findById(Integer bookId);
     Collection<Book> findByName(String name);

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Created by zotova on 15.08.2016.
@@ -33,6 +35,31 @@ public class BookService {
     @Autowired
     LibraryService libraryService;
 
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/all")
+    public Response all() {
+
+        Collection<Book> books = libraryService.all();
+        if (books == null)
+            return Response.status(500).type("application/json").build();
+
+        HashMap<String, LinkedList<HashMap<String, String>>> response = new HashMap<>();
+        LinkedList<HashMap<String, String>> responseList = new LinkedList<>();
+        response.put("books", responseList);
+
+        for (Book book : books) {
+            HashMap<String, String> bookResponse = new HashMap<>();
+            bookResponse.put("bookId", String.valueOf(book.getId()));
+            bookResponse.put("bookName", book.getBookName());
+            bookResponse.put("bookAuthor", book.getAuthor());
+            responseList.add(bookResponse);
+        }
+
+        return Response.ok(response, MediaType.APPLICATION_JSON).type("application/json").build();
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/createOrUpdate")
@@ -44,24 +71,24 @@ public class BookService {
         Integer id = parseId(bookId);
         HashMap<String, String> response = new HashMap<>();
         Book book = libraryService.findById(id);
+
         if (book == null) {
             book = new Book();
-            response.put("created", "true");
         }
-        else response.put("created", "false");
-
         if (bookName != null && !bookName.isEmpty()) {
             book.setBookName(bookName);
         }
-
-        response.put("bookName", bookName);
-        response.put("author", bookAuthor);
-
         if (bookAuthor != null && !bookAuthor.isEmpty())
             book.setAuthor(bookAuthor);
 
-        libraryService.createOrUpdate(book);
-
+        book = libraryService.createOrUpdate(book);
+        if (book == null)        {
+            response.put("info", "Cannot create book with empty parameters");
+        }
+        else  {
+            response.put("bookName", bookName);
+            response.put("bookAuthor", bookAuthor);
+        }
         return Response.ok(response, MediaType.APPLICATION_JSON).type("application/json").build();
     }
 
@@ -71,8 +98,11 @@ public class BookService {
     public Response removeBook(@DefaultValue("") @QueryParam("bookId") String bookId) {
         HashMap<String, String> response = new HashMap<>();
 
-        if (bookId == null || bookId != null && bookId.isEmpty())
-            return Response.status(500).type("application/json").build();
+        if (bookId == null || bookId != null && bookId.isEmpty()) {
+            response.put("info", "Cannot remove book, book id is empty");
+            return Response.ok(response, MediaType.APPLICATION_JSON)
+                    .type("application/json").build();
+        }
 
         Integer id = parseId(bookId);
 

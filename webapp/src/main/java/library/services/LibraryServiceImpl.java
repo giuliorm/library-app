@@ -21,9 +21,14 @@ public class LibraryServiceImpl implements LibraryService {
         return repository.all();
     }
 
-    public void createOrUpdate(Book book) {
-        if (repository.update(book) <= 0)
-            repository.create(book);
+    public Book createOrUpdate(Book book) {
+        if (book.getBookName() != null && !book.getBookName().isEmpty() && book.getAuthor() != null
+                && !book.getAuthor().isEmpty()) {
+            if (repository.update(book) <= 0)
+                repository.create(book);
+            return book;
+        }
+        return null;
     }
     public void remove(Integer bookId) {
         if (bookId != null)

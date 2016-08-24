@@ -118,14 +118,14 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean
 
                 Cookie[] cookies = req.getCookies();
 
-                int tokenInd =  Arrays.binarySearch(cookies, new Cookie("token", ""),
+                int tokenInd =  cookies != null ? Arrays.binarySearch(cookies, new Cookie("token", ""),
                         new Comparator<Cookie>() {
                             @Override
                             public int compare(Cookie o1, Cookie o2) {
                                  return o1.getName().compareTo(o2.getName());
                             }
-                        });
-                String stringToken = tokenInd >= 0 ? req.getCookies()[tokenInd].getValue() : null;
+                        }) : -1;
+                String stringToken = tokenInd >= 0 &&  cookies[tokenInd] != null ? cookies[tokenInd].getValue() : null;
                 JWTToken tokenObj = null;
                 String username = req.getParameter("username");
                 String password = req.getParameter("password");
@@ -146,7 +146,8 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean
                 }
             }
             catch (Exception e) {
-
+                String mes = e.getMessage();
+                logger.error(e);
             }
 
     }

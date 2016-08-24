@@ -330,14 +330,28 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
+   <!-- <resources>
+        <resource>
+            <directory>${project.basedir}/target/webapp/resources</directory>
+            <excludes>
+                <exclude>node/*</exclude>
+                <exclude>node_modules/*</exclude>
+                <exclude>package.json</exclude>
+                <exclude>webpack.json</exclude>
+            </excludes>
+        </resource>
+    </resources> -->
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
 
             </plugin>
+
+
+
         </plugins>
+
         <finalName>webapp</finalName>
     </build>
 

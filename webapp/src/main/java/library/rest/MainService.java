@@ -52,18 +52,19 @@ public class MainService {
         return Response.ok(response, MediaType.APPLICATION_JSON).type("application/json").build();
     }
 
-    @GET
+
+   /* @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/main")
+    @Path("/*")
     public Viewable main() {
 
-        return new Viewable("/main");
-    }
-
+        return new Viewable("/index");
+    } */
+ /*
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/test")
     public String test() {
         return "test";
-    }
+    } */
 }
